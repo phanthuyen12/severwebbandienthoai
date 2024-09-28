@@ -22,9 +22,10 @@ const getCategoryById = (categoryId, callback) => {
 
 // Tạo mới category
 const createCategory = (categoryData, callback) => {
-    const { CategoryName, Description, ImageURL } = categoryData;
-    db.query('INSERT INTO category (CategoryName, Description, ImageURL) VALUES (?, ?, ?)', 
-    [CategoryName, Description, ImageURL], (err, result) => {
+    const { CategoryName, Description, ImageURL,status,location} = categoryData;
+    console.log(categoryData);
+    db.query('INSERT INTO category (CategoryName, Description, ImageURL,status,location) VALUES (?, ?, ?,?,?)', 
+    [CategoryName, Description, ImageURL,status,location], (err, result) => {
         if (err) {
             return callback(err, null);
         }
@@ -34,9 +35,9 @@ const createCategory = (categoryData, callback) => {
 
 // Cập nhật category theo ID
 const updateCategory = (categoryId, categoryData, callback) => {
-    const { CategoryName, Description, ImageURL } = categoryData;
-    db.query('UPDATE category SET CategoryName = ?, Description = ?, ImageURL = ? WHERE CategoryID = ?', 
-    [CategoryName, Description, ImageURL, categoryId], (err, result) => {
+    const { CategoryName, Description, ImageURL,location } = categoryData;
+    db.query('UPDATE category SET CategoryName = ?, Description = ?, ImageURL = ? ,location = ? WHERE CategoryID = ?', 
+    [CategoryName, Description, ImageURL,location, categoryId], (err, result) => {
         if (err) {
             return callback(err, null);
         }

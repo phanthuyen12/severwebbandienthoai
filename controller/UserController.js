@@ -39,6 +39,7 @@ const createUser = (req, res) => {
 const updateUser = (req, res) => {
     const userId = req.params.id;
     const updatedUser = req.body;
+    console.log(req.body);
     
     userModel.updateUser(userId, updatedUser, (err, result) => {
         if (err) {
@@ -55,6 +56,7 @@ const updateUser = (req, res) => {
 const updateUserStatus = (req, res) => {
     const userId = req.params.id;
     const newStatus = req.body.status;
+    console.log(newStatus);
 
     userModel.updateUserStatus(userId, newStatus, (err, result) => {
         if (err) {

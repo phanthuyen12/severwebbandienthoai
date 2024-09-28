@@ -13,14 +13,14 @@ router.get('/', function(req, res, next) {
 router.get('/getall-category', categoryController.getAllCategories); // Lấy tất cả categories
 router.get('/get-category/:id', categoryController.getCategoryById); // Lấy category theo ID
 router.post('/create-category', categoryController.createCategory); // Tạo mới category
-router.put('/update-category/:id', categoryController.updateCategory); // Cập nhật category theo ID
+router.post('/update-category/:id', categoryController.updateCategory); // Cập nhật category theo ID
 router.delete('/delete-category/:id', categoryController.deleteCategory); // Xóa category theo ID
 
-router.get('/products', productsController.getAllProducts);
-router.get('/products/:id', productsController.getProductById);
-router.post('/products/creates', productsController.createProduct);
-router.post('/products/delete/:id', productsController.deleteProductById);
-router.post('/products/update-status/:id', productsController.updateProductStatus);
+// router.get('/products', productsController.getAllProducts);
+// router.get('/products/:id', productsController.getProductById);
+// router.post('/products/creates', productsController.createProduct);
+// router.post('/products/delete/:id', productsController.deleteProductById);
+// router.post('/products/update-status/:id', productsController.updateProductStatus);
 
 router.get('/user', userController.getAllUsers);
 router.get('/user/:id', userController.getUserById);
