@@ -60,6 +60,32 @@ const productModel = {
             callback(null, result);
         });
     },
+    getProductsNew: (callback) => {
+        const query = `
+            SELECT p.*, 
+                   GROUP_CONCAT(pi.OtherImages) AS OtherImages
+            FROM product p
+            LEFT JOIN productimage pi ON p.ProductID = pi.ProductID
+            GROUP BY p.ProductID
+            ORDER BY p.Creationtime DESC
+            LIMIT 10
+        `;
+        db.query(query, (err, result) => {
+            if (err) {
+                return callback(err, null); // Return error if any
+            }
+    
+            // Parse the OtherImages string into an array
+            result.forEach(product => {
+                product.OtherImages = product.OtherImages ? product.OtherImages.split(',') : [];
+            });
+    
+            callback(null, result); // Return the result
+        });
+    },
+    
+    
+    
 
     // Tạo sản phẩm mới
     createProduct: (newProduct, callback) => {

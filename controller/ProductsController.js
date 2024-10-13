@@ -136,11 +136,20 @@ const updateProductStatus = (req, res) => {
         res.status(200).json({ message: 'Product status updated successfully' });
     });
 };
-
+const getProductsGetNew = (req,res)=>{
+    console.log('trssst')
+    productModel.getProductsNew((err, products) => {
+        if (err) {
+            return res.status(500).json({status:false, message: 'Error retrieving products', error: err });
+        }
+        return res.status(200).json({status:true, data: products });
+    });
+};
 module.exports = {
     getAllProducts,
     getProductById,
     createProduct,
     deleteProductById,
-    updateProductStatus
+    updateProductStatus,
+    getProductsGetNew
 };

@@ -21,10 +21,17 @@ const VoucherModel = {
 
   // Thêm voucher mới
   createVoucher: (newVoucher, callback) => {
-    const query = 'INSERT INTO voucher (Code, DiscountAmount, ExpiryDate, MinimumPurchaseAmount) VALUES (?, ?, ?, ?)';
+    const query = 'INSERT INTO voucher (Code, ExpiryDate, MinimumPurchaseAmount, usablequantity, status, percent) VALUES ( ?, ?, ?, ?, ?,  ?)';
     db.query(
       query,
-      [newVoucher.Code, newVoucher.DiscountAmount, newVoucher.ExpiryDate, newVoucher.MinimumPurchaseAmount],
+      [
+        newVoucher.Code, 
+        newVoucher.ExpiryDate, 
+        newVoucher.MinimumPurchaseAmount, 
+        newVoucher.usableQuantity,
+        newVoucher.status,
+        newVoucher.percent
+      ],
       (err, result) => {
         if (err) throw err;
         callback(null, result.insertId);
@@ -34,10 +41,18 @@ const VoucherModel = {
 
   // Cập nhật voucher theo ID
   updateVoucher: (VoucherID, updatedVoucher, callback) => {
-    const query = 'UPDATE voucher SET Code = ?, DiscountAmount = ?, ExpiryDate = ?, MinimumPurchaseAmount = ? WHERE VoucherID = ?';
+    const query = 'UPDATE voucher SET Code = ?, ExpiryDate = ?, MinimumPurchaseAmount = ?, usablequantity = ?, status = ?, percent = ? WHERE VoucherID = ?';
     db.query(
       query,
-      [updatedVoucher.Code, updatedVoucher.DiscountAmount, updatedVoucher.ExpiryDate, updatedVoucher.MinimumPurchaseAmount, VoucherID],
+      [
+        updatedVoucher.Code, 
+        updatedVoucher.ExpiryDate, 
+        updatedVoucher.MinimumPurchaseAmount, 
+        updatedVoucher.usablequantity,
+        updatedVoucher.status,
+        updatedVoucher.percent,
+        VoucherID
+      ],
       (err, result) => {
         if (err) throw err;
         callback(null, result);
@@ -52,7 +67,30 @@ const VoucherModel = {
       if (err) throw err;
       callback(null, result);
     });
+  },
+
+  // Tìm voucher theo mã code
+  getVoucherByCode: (code, result) => {
+    const query = 'SELECT * FROM voucher WHERE Code = ?';  // Đảm bảo bảng của bạn tên là "voucher" (hoặc đúng tên bảng trong database)
+
+    db.query(query, [code], (err, res) => {
+      if (err) {
+        return result(err, null);
+      }
+      if (res.length > 0) {
+        return result(null, res[0]);  // Trả về voucher đầu tiên tìm được
+      }
+      result(null, null);  // Không tìm thấy voucher
+    });
+  },
+  incrementQuantityUsed: (VoucherID, callback) => {
+    const query = 'UPDATE voucher SET quantityused = quantityused + 1 WHERE VoucherID = ?';
+    db.query(query, [VoucherID], (err, result) => {
+      if (err) throw err;
+      callback(null, result);
+    });
   }
+  
 };
 
 module.exports = VoucherModel;

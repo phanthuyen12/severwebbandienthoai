@@ -11,7 +11,20 @@ const userModel = {
             callback(null, results);
         });
     },
-
+    findUserByEmailAndToken: (email, tokenuser, callback) => {
+        const query = 'SELECT * FROM user WHERE email = ? AND tokenuser = ?';
+        db.query(query, [email, tokenuser], (err, results) => {
+            if (err) {
+                return callback(err, null);
+            }
+            // Kiểm tra nếu người dùng được tìm thấy
+            if (results.length > 0) {
+                callback(null, results[0]); // Trả về người dùng đầu tiên
+            } else {
+                callback(null, null); // Không tìm thấy người dùng
+            }
+        });
+    },
     // Lấy người dùng theo UserID
     getUserById: (id, callback) => {
         const query = 'SELECT * FROM user WHERE UserID = ?';
@@ -25,8 +38,8 @@ const userModel = {
 
     // Tạo người dùng mới
     createUser: (newUser, callback) => {
-        const query = 'INSERT INTO user (Username, Password, Email, PhoneNumber, Address, Role, status) VALUES (?, ?, ?, ?, ?, ?, ?)';
-        const values = [newUser.Username, newUser.Password, newUser.Email, newUser.PhoneNumber, newUser.Address, newUser.Role, newUser.status];
+        const query = 'INSERT INTO user (Username, Password, Email, PhoneNumber, Address, Role, status, tokenuser) VALUES (?, ?, ?, ?, ?, ?, ?, ?)';
+        const values = [newUser.Username, newUser.Password, newUser.Email, newUser.PhoneNumber, newUser.Address, newUser.Role, newUser.status, newUser.tokenuser];
         db.query(query, values, (err, result) => {
             if (err) {
                 return callback(err, null);
@@ -34,6 +47,18 @@ const userModel = {
             callback(null, result);
         });
     },
+    
+    // Model để tìm kiếm người dùng theo email
+findUserByEmail: (email, callback) => {
+    const query = 'SELECT * FROM user WHERE Email = ?';
+    db.query(query, [email], (err, results) => {
+        if (err) {
+            return callback(err, null);
+        }
+        // Trả về người dùng đầu tiên (nếu có)
+        callback(null, results.length > 0 ? results[0] : null);
+    });
+},
 
     // Cập nhật thông tin người dùng
     updateUser: (id, updatedUser, callback) => {

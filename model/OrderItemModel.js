@@ -1,9 +1,8 @@
-// models/OrderItemModel.js
 const db = require('../config/db');
 
 // Lấy tất cả order items
-const getAllOrderItems = (callback) => {
-    db.query('SELECT * FROM OrderItems', (err, results) => {
+const getAllorderitem = (callback) => {
+    db.query('SELECT * FROM `orderitem`', (err, results) => {
         if (err) {
             return callback(err, null);
         }
@@ -13,7 +12,7 @@ const getAllOrderItems = (callback) => {
 
 // Lấy order item theo ID
 const getOrderItemById = (orderItemId, callback) => {
-    db.query('SELECT * FROM OrderItems WHERE OrderItemID = ?', [orderItemId], (err, result) => {
+    db.query('SELECT * FROM `orderitem` WHERE OrderItemID = ?', [orderItemId], (err, result) => {
         if (err) {
             return callback(err, null);
         }
@@ -24,7 +23,9 @@ const getOrderItemById = (orderItemId, callback) => {
 // Tạo mới order item
 const createOrderItem = (orderItemData, callback) => {
     const { OrderID, ProductID, Quantity, Price } = orderItemData;
-    db.query('INSERT INTO OrderItems (OrderID, ProductID, Quantity, Price) VALUES (?, ?, ?, ?)', 
+
+    // Đảm bảo câu lệnh SQL sử dụng dấu backticks cho tên bảng
+    db.query('INSERT INTO `orderitem` (OrderID, ProductID, Quantity, Price) VALUES (?, ?, ?, ?)', 
     [OrderID, ProductID, Quantity, Price], (err, result) => {
         if (err) {
             return callback(err, null);
@@ -36,7 +37,9 @@ const createOrderItem = (orderItemData, callback) => {
 // Cập nhật order item
 const updateOrderItem = (orderItemId, orderItemData, callback) => {
     const { Quantity, Price } = orderItemData;
-    db.query('UPDATE OrderItems SET Quantity = ?, Price = ? WHERE OrderItemID = ?', 
+
+    // Đảm bảo câu lệnh SQL sử dụng dấu backticks cho tên bảng
+    db.query('UPDATE `orderitem` SET Quantity = ?, Price = ? WHERE OrderItemID = ?', 
     [Quantity, Price, orderItemId], (err, result) => {
         if (err) {
             return callback(err, null);
@@ -47,7 +50,7 @@ const updateOrderItem = (orderItemId, orderItemData, callback) => {
 
 // Xóa order item theo ID
 const deleteOrderItem = (orderItemId, callback) => {
-    db.query('DELETE FROM OrderItems WHERE OrderItemID = ?', [orderItemId], (err, result) => {
+    db.query('DELETE FROM `orderitem` WHERE OrderItemID = ?', [orderItemId], (err, result) => {
         if (err) {
             return callback(err, null);
         }
@@ -56,7 +59,7 @@ const deleteOrderItem = (orderItemId, callback) => {
 };
 
 module.exports = {
-    getAllOrderItems,
+    getAllorderitem,
     getOrderItemById,
     createOrderItem,
     updateOrderItem,

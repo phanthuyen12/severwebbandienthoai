@@ -1,9 +1,9 @@
 // models/OrderModel.js
 const db = require('../config/db');
 
-// Lấy tất cả orders
-const getAllOrders = (callback) => {
-    db.query('SELECT * FROM Orders', (err, results) => {
+// Lấy tất cả order
+const getAllorder = (callback) => {
+    db.query('SELECT * FROM order', (err, results) => {
         if (err) {
             return callback(err, null);
         }
@@ -13,7 +13,7 @@ const getAllOrders = (callback) => {
 
 // Lấy order theo ID
 const getOrderById = (orderId, callback) => {
-    db.query('SELECT * FROM Orders WHERE OrderID = ?', [orderId], (err, result) => {
+    db.query('SELECT * FROM order WHERE OrderID = ?', [orderId], (err, result) => {
         if (err) {
             return callback(err, null);
         }
@@ -23,9 +23,11 @@ const getOrderById = (orderId, callback) => {
 
 // Tạo mới order
 const createOrder = (orderData, callback) => {
-    const { UserID, TotalAmount, Status, PaymentStatus, VoucherID } = orderData;
-    db.query('INSERT INTO Orders (UserID, OrderDate, TotalAmount, Status, PaymentStatus, VoucherID) VALUES (?, NOW(), ?, ?, ?, ?)', 
-    [UserID, TotalAmount, Status || 'pending', PaymentStatus || 'unpaid', VoucherID || null], (err, result) => {
+    const { UserID, TotalAmount, Status, PaymentStatus, VoucherID, TotalDiscount, codeorder, TimeBuy, address } = orderData;
+
+    // Sử dụng backticks để xử lý tên bảng 'order'
+    db.query('INSERT INTO `order` (UserID, OrderDate, TotalAmount, Status, PaymentStatus, VoucherID, TotalDiscount, codeorder, TimeBuy, address) VALUES (?, NOW(), ?, ?, ?, ?, ?, ?, ?, ?)', 
+    [UserID, TotalAmount, Status || 'pending', PaymentStatus || 'unpaid', VoucherID || null, TotalDiscount || 0, codeorder, TimeBuy, address], (err, result) => {
         if (err) {
             return callback(err, null);
         }
@@ -33,11 +35,12 @@ const createOrder = (orderData, callback) => {
     });
 };
 
+
 // Cập nhật order
 const updateOrder = (orderId, orderData, callback) => {
-    const { TotalAmount, Status, PaymentStatus } = orderData;
-    db.query('UPDATE Orders SET TotalAmount = ?, Status = ?, PaymentStatus = ? WHERE OrderID = ?', 
-    [TotalAmount, Status, PaymentStatus, orderId], (err, result) => {
+    const { TotalAmount, Status, PaymentStatus, TotalDiscount, codeorder, TimeBuy, address } = orderData;
+    db.query('UPDATE order SET TotalAmount = ?, Status = ?, PaymentStatus = ?, TotalDiscount = ?, codeorder = ?, TimeBuy = ?, address = ? WHERE OrderID = ?', 
+    [TotalAmount, Status, PaymentStatus, TotalDiscount, codeorder, TimeBuy, address, orderId], (err, result) => {
         if (err) {
             return callback(err, null);
         }
@@ -47,7 +50,7 @@ const updateOrder = (orderId, orderData, callback) => {
 
 // Xóa order theo ID
 const deleteOrder = (orderId, callback) => {
-    db.query('DELETE FROM Orders WHERE OrderID = ?', [orderId], (err, result) => {
+    db.query('DELETE FROM order WHERE OrderID = ?', [orderId], (err, result) => {
         if (err) {
             return callback(err, null);
         }
@@ -56,7 +59,7 @@ const deleteOrder = (orderId, callback) => {
 };
 
 module.exports = {
-    getAllOrders,
+    getAllorder,
     getOrderById,
     createOrder,
     updateOrder,
